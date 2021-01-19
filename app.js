@@ -1,29 +1,41 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-
+const cTable = require('console.table');
 
 
 var connection = mysql.createConnection({
     host: "127.0.0.1",
-  
-    // Your port; if not 3306
+
+    // Port I will be using 
     port: 3306,
-  
-    // Your username
+
+    // username
     user: "root",
-  
+
     // Your password
-    password: "",
-    database: "localhost2"
-  });
-  
-  connection.connect(function(err) {
+    password: "whatitDo2You",
+    database: "employer_db"
+});
+
+connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
     createProduct();
-  });
-  
-  
+});
+
+const table = cTable.getTable([
+    {
+        name: 'foo',
+        age: 10
+    }, {
+        name: 'bar',
+        age: 20
+    }
+]);
+
+console.log(table);
+
+
 //const inquirerr = () =>
 
 
