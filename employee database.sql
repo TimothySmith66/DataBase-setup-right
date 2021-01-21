@@ -23,3 +23,7 @@ CREATE DATABASE employer_db;
  department_id INT NOT NULL,
  PRIMARY KEY (id)
  );
+
+
+ INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Timothy", Smith, 2256, 7788);

@@ -20,40 +20,124 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
-    createProduct();
-});
+    insert();
+    function mainMenu() {
+        inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    message: "What would you like to do?",
+                    name: 'start',
+                    choices: ["view all employees", "view all roles", "view all departments", "add employee", "add departments", "Add roles", "update employee roles"],
+                },
+            ])
 
-const table = cTable.getTable([
-    {
-        name: 'foo',
-        age: 10
-    }, {
-        name: 'bar',
-        age: 20
-    }
-]);
+            .then(answers => {
+                console.log(answers);
+                switch (answers.menu) {
+                    case 'view all employees': searchEmployees();
+                        break;
+                    case 'view all roles': viewRoles();
+                        break;
+                    case 'view all departments': viewDepartments();
+                        break;
+                    case 'addEmployee': addEmployee();
+                        break;
+                    case 'add departments': addDepartments();
+                        break;
+                    case 'Add roles': addRole();
+                        break;
+                    case 'update employee roles':
+                        update();
+                        break;
+            }
+        })
+            
+                .catch ((error) => {
+            console.log(error);
+            process.exit(1);
+        });
+              }
+//connection.query(`SELECT * FROM `` WHERE `author` = "David`)
+function searchEmployees() {
+    inquirer.prompt([{
+        type: "input",
+        message: "Please enter an artist",
+        name: "artistSearch"
+    }])
+}
 
-console.log(table);
 
+function viewRoles() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Please enter starting range",
+            name: "startingRange"
+        },
+        {
+            type: "input",
+            message: "Please enter ending range",
+            name: "endingRange"
+        },
+    ])
+}
+function viewDepartments() {
+    inquirer.prompt([{
+        type: "input",
+        message: "Please enter a song title",
+        name: "songSearch"
+    }])
+}
+function addEmployee() {
+    inquirer.prompt([{
+        type: "input",
+        message: "Please enter an artist",
+        name: "artistSearch"
+    }])
+}
 
-//const inquirerr = () =>
+function addDepartments() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Please enter starting range",
+            name: "startingRange"
+        },
+        {
+            type: "input",
+            message: "Please enter ending range",
+            name: "endingRange"
+        },
+    ])
+}
+function addRole() {
+    inquirer.prompt([{
+        type: "input",
+        message: "Please enter a song title",
+        name: "songSearch"
+    }])
 
+}
+function update() {
+    inquirer.prompt([{
+        type: "input",
+        message: "Please enter a song title",
+        name: "songSearch"
+    }])
 
-// inquirer
-//   .prompt([
-//     {
-//         type: 'input',
-//         message: 'What is the title of your project?',
-//         name: 'name',
-//     },
-//   ])
-//   .then(answers => {
-//     // Use user feedback for... whatever!!
-//   })
-//   .catch(error => {
-//     if(error.isTtyError) {
-//       // Prompt couldn't be rendered in the current environment
-//     } else {
-//       // Something else when wrong
-//     }
-//   });
+}
+
+            });
+
+function insert() {
+    connection.query("SELECT * FROM employee INNER JOIN role INNER JOIN department", function (err, res) {
+        if (err) throw err;
+        console.log(res);
+        connection.end();
+    });
+    
+}
+//const table = cTable.getTable(res)
+
+//console.log(table);
