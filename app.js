@@ -142,10 +142,12 @@ function viewDepartments() {
 function addEmployee() {
     inquirer.prompt([{
         type: "input",
-        message: "Please enter an artist",
+        message: "input new employee's info here",
         name: "artistSearch"
     }])
         .then((answers) => {
+            let query = "INSERT ? INTO ?" 
+           
             connection.query("update ", answers, function (err, res) {
                 if (err) {
                     console.log(err);
