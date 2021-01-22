@@ -6,12 +6,19 @@ function mainMenu() {
                 type: 'list',
                 message: "What would you like to do?",
                 name: 'start',
-                choices: ["view all employees", "view all roles", "view all departments", "add employee", "add departments", "Add roles", "update employee roles"],
+                choices: ["view all employees", 
+                "view all roles", 
+                "view all departments", 
+                "add employee", 
+                "add departments", 
+                "Add roles", 
+                "update employee roles"],
+
             },
         ])
 
         .then(answers => {
-            console.log(answers);
+            console.(answers);
             switch (answers.menu) {
                 case 'view all employees': searchEmployees();
                     break;
