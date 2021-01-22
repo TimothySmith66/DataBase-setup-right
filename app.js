@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
 
     // Your password
     password: "whatitDo2You",
-    database: "employer_db"
+    database: "employers2_db"
 });
 //connect to the mysql date base
 connection.connect((err) => {
@@ -60,7 +60,6 @@ function mainMenu() {
                     update();
                     break;
                 default:
-                    //console.log(answers.start)
                     connection.end();
             }
         })
@@ -75,27 +74,13 @@ function searchEmployees() {
     inquirer
         .prompt([{
             type: "input",
-            message: "What is the employee's first name?",
+            message: "press any character to see all employees",
             name: "srchEmployee",
-        },
-        {
-            type: "input",
-            message: "What is the employee's last name?",
-            name: "srchEmployee2"
-        }
-        ])
-        .then(function (answers) {
+        }])
+        .then((answers) => {
 
-
-            const response = answers.srchEmployee + answers.srchEmployee2;
-            // console.table(answers.srchEmployee);
-            const query = "INSERT INTO employee( first_name, last_name,  role_id, manager_id";
-            //values( "Tanner", "Smith", 4477, 9898);
-            //    var query = "SELECT top_albums.year, top_albums.position, top_albums.artist, top_albums.album, top5000.song"
-            //    + " FROM top_albums INNER JOIN top5000"
-            //    + " ON (top_albums.artist = top5000.artist AND top_albums.year = top5000.year)"
-            //    + " WHERE top_albums.artist = ?"
-            //    + " ORDER BY top_albums.year, top_albums.position;";
+            let response = answers.start;
+            const query = "select e.id, e.first_name, e.last_name, salary, title, department_id, r.department_id from employee as e left join role as r on e.manager_id = r.id left join department as d on r.department_id = d.id;";
             connection.query(query, response, function (err, res) {
                 if (err) {
                     console.log(err);
@@ -107,37 +92,44 @@ function searchEmployees() {
         });
 }
 
-   
 
-function viewRoles() {
+
+function viewRoles(answers) {
     inquirer
-        .prompt([
-            {
-                type: "confirm",
-                message: "You forsure? contains sensitive information",
-                name: "yesOrNo",
-            },
+        .prompt([{
+            type: "input",
+            message: "press any character to see all role data",
+            name: "srchEmployee",
+        },
         ])
         .then((answers) => {
-        
-            connection.query("select * from role;", answers, function (err, res) {
+
+
+            let response = answers.start;
+            const query = "select * from role;";
+            connection.query(query, function (err, res) {
                 if (err) {
                     console.log(err);
-                }  {
-                    console.table(res);
+                } else {
+                    console.table(res)
                 }
-            }
-            );
+
+                mainMenu();
+            });
         });
 }
+
+
 function viewDepartments() {
     inquirer.prompt([{
         type: "input",
-        message: "see departments:",
+        message: "see departments by pressing any key!",
         name: "srchdepartments"
     }])
         .then((answers) => {
-            connection.query("select * from department;", answers, function (err, res) {
+            let response = answers.start;
+            const query = "select * from department;";
+            connection.query(query, answers, function (err, res) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -154,7 +146,7 @@ function addEmployee() {
         name: "artistSearch"
     }])
         .then((answers) => {
-            connection.query("select * from department;", answers, function (err, res) {
+            connection.query("update ", answers, function (err, res) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -174,7 +166,7 @@ function addDepartments() {
         },
         {
             type: "input",
-            message: "Please enter ending range",
+            message: "insert values to add to department",
             name: "endingRange"
         },
     ])
@@ -192,8 +184,8 @@ function addDepartments() {
 function addRole() {
     inquirer.prompt([{
         type: "input",
-        message: "Please enter a song title",
-        name: "songSearch"
+        message: "add a role to the database here",
+        name: "addData"
     }])
         .then(answers => {
             connection.query()
