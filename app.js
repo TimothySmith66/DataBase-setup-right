@@ -87,8 +87,11 @@ function searchEmployees() {
                 } else {
                     console.table(res);
                 }
+                mainMenu()
             }
+            
             );
+            
         });
 }
 
@@ -135,78 +138,106 @@ function viewDepartments() {
                 } else {
                     console.table(res);
                 }
+                mainMenu()
             }
+            
             );
         });
 }
-function addEmployee() {
-    inquirer.prompt([{
-        type: "input",
-        message: "input new employee's info here",
-        name: "artistSearch"
-    }])
-        .then((answers) => {
-            let query = "INSERT ? INTO ?" 
-           
-            connection.query("update ", answers, function (err, res) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.table(res);
-                }
+const addEmployee = () => {
+    connection.query(roleQuery, (err, results) => {
+        if (err) throw err;
+        inquirer.prompt([
+            {
+                type: "input",
+                message: questions[0],
+                name: "firstN",
+            },
+            {
+                type: "input",
+                message: questions[1],
+                name: "lastN",
+            },
+            {
+                type: "list",
+                name: "role",
+                choices: function () {
+                    let choiceArray = results[0].map(choice => choice.title);
+                    return choiceArray;
+                },
+                message: questions[2]
+            },
+            {
+                type: "list",
+                name: "manager",
+                choices: function () {
+                    let choiceArray = results[1].map(choice => choice.full_name);
+                    return choiceArray;
+                },
+                message: questions[3]
             }
-            );
-        });
+        ])
+            .then((answer) => {
+                connection.query(
+                    `INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES(?, ?, 
+                (SELECT id FROM roles WHERE title = ? ), 
+                (SELECT id FROM (SELECT id FROM employees WHERE CONCAT(first_name," ",last_name) = ? ) AS ....))`, [answer.firstN, answer.lastN, answer.role, answer.manager]
+                )
+                startApp();
+            })
+    })
 }
+
 
 function addDepartments() {
-    inquirer.prompt([
-        {
-            type: "input",
-            message: "Please enter starting range",
-            name: "startingRange"
-        },
-        {
-            type: "input",
-            message: "insert values to add to department",
-            name: "endingRange"
-        },
-    ])
-        .then((answers) => {
-            connection.query("select * from department;", answers, function (err, res) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.table(res);
-                }
-            }
-            );
-        });
-}
-function addRole() {
-    inquirer.prompt([{
-        type: "input",
-        message: "add a role to the database here",
-        name: "addData"
-    }])
-        .then(answers => {
-            connection.query()
+            inquirer.prompt([
+                {
+                    type: "input",
+                    message: "Please enter starting range",
+                    name: "startingRange"
+                },
+                {
+                    type: "input",
+                    message: "insert values to add to department",
+                    name: "endingRange"
+                },
+            ])
+                .then((answers) => {
+                    connection.query("select * from department;", answers, function (err, res) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.table(res);
+                        }
+                        mainMenu()
+                    }
+                    );
+                });
         }
+function addRole() {
+            inquirer.prompt([{
+                type: "input",
+                message: "add a role to the database here",
+                name: "addData"
+            }])
+                .then(answers => {
+                    connection.query()
+                }
 
-        )
-}
+                )
+        }
 function update() {
-    inquirer.prompt([{
-        type: "input",
-        message: "Please enter a song title",
-        name: "songSearch"
-    }])
-        .then(answers => {
-            connection.query()
-        })
-    //     .then
-    // connection.query("SELECT * FROM employee INNER JOIN role INNER JOIN department", function (err, res) {)
-}
+            inquirer.prompt([{
+                type: "input",
+                message: "Please enter a song title",
+                name: "songSearch"
+            }])
+                .then(answers => {
+                    connection.query()
+                })
+            //     .then
+            // connection.query("SELECT * FROM employee INNER JOIN role INNER JOIN department", function (err, res) {)
+        }
 
 
 
