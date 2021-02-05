@@ -42,7 +42,7 @@ function mainMenu() {
         })
         // main menu that will give different option through the call of functions
         .then(answers => {
-            console.table(answers);
+            // console.table(answers);
             switch (answers.start) {
                 case 'view all employees': searchEmployees();
                     break;
@@ -50,7 +50,7 @@ function mainMenu() {
                     break;
                 case 'view all departments': viewDepartments();
                     break;
-                case 'addEmployee': addEmployee();
+                case 'add employee': addEmployee();
                     break;
                 case 'add departments': addDepartments();
                     break;
@@ -60,7 +60,8 @@ function mainMenu() {
                     update();
                     break;
                 default:
-                    connection.end();
+                  console.log (answers.start); 
+                  connection.end();
             }
         })
 
@@ -145,81 +146,88 @@ function viewDepartments() {
         });
 }
 const addEmployee = () => {
-    connection.query(roleQuery, (err, results) => {
-        if (err) throw err;
+     //const roleQuery = "SELECT * FROM employee";
+    // connection.query(answer, (err, results) => {
+    //     if (err) throw err;
         inquirer.prompt([
             {
                 type: "input",
-                message: questions[0],
+                message: "what is their first name?",
                 name: "firstN",
             },
             {
                 type: "input",
-                message: questions[1],
+                message: "what is their last name?",
                 name: "lastN",
             },
             {
-                type: "list",
+                type: "input",
                 name: "role",
-                choices: function () {
-                    let choiceArray = results[0].map(choice => choice.title);
-                    return choiceArray;
-                },
-                message: questions[2]
+                message: "what is their role Id?"
             },
             {
-                type: "list",
+                type: "input",
                 name: "manager",
-                choices: function () {
-                    let choiceArray = results[1].map(choice => choice.full_name);
-                    return choiceArray;
-                },
-                message: questions[3]
+                message: "what is there manager Id"
             }
         ])
             .then((answer) => {
                 connection.query(
-                    `INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES(?, ?, 
-                (SELECT id FROM roles WHERE title = ? ), 
-                (SELECT id FROM (SELECT id FROM employees WHERE CONCAT(first_name," ",last_name) = ? ) AS ....))`, [answer.firstN, answer.lastN, answer.role, answer.manager]
-                )
-                startApp();
+                   `INSERT INTO employee SET ?`,
+                   {first_name: answer.firstN,
+                     last_name: answer.lastN,
+                      role_id: answer.role,
+                      manager_id: answer.manager}
+                      
+                );mainMenu()
+                
             })
-    })
-}
+    }
+      
 
 
 function addDepartments() {
             inquirer.prompt([
+                
                 {
                     type: "input",
-                    message: "Please enter starting range",
-                    name: "startingRange"
-                },
-                {
-                    type: "input",
-                    message: "insert values to add to department",
-                    name: "endingRange"
+                    message: "Add a department to the database",
+                    name: "newDepartment",
+                    
                 },
             ])
                 .then((answers) => {
-                    connection.query("select * from department;", answers, function (err, res) {
+                    connection.query("INSERT INTO department SET ?", {name: answers.newDepartment}, function (err, res) {
                         if (err) {
                             console.log(err);
                         } else {
                             console.table(res);
                         }
+                        
                         mainMenu()
                     }
                     );
                 });
         }
 function addRole() {
-            inquirer.prompt([{
-                type: "input",
-                message: "add a role to the database here",
-                name: "addData"
-            }])
+            inquirer.prompt([
+                {
+                    type: "input",
+                    message: "what is their first name?",
+                    name: "salary",
+                },
+                {
+                    type: "input",
+                    message: "what is their last name?",
+                    name: "title",
+                }, 
+                //department_id
+                {
+                    type: "input",
+                    name: "departmentId",
+                    message: "what is there department ID?"
+                }
+            ])
                 .then(answers => {
                     connection.query()
                 }
@@ -230,7 +238,7 @@ function update() {
             inquirer.prompt([{
                 type: "input",
                 message: "Please enter a song title",
-                name: "songSearch"
+                name: ""
             }])
                 .then(answers => {
                     connection.query()
